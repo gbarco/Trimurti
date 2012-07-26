@@ -12,13 +12,14 @@ use Config::General;
 use Getopt::Long;
 use Log::Log4perl qw/:easy/;
 use POSIX qw(isdigit);
+use File::Basename;
 
 # ============================================================================
 require Exporter;
 use vars qw($VERSION @ISA @EXPORT);
 
 @ISA = qw(Exporter);
-@EXPORT = qw(read_project_config);
+@EXPORT = qw(read_project_config build_stash);
 
 # ============================================================================
 my $config_file = ".vishnu";
@@ -32,8 +33,14 @@ sub read_project_config {
 																		-IncludeRelative => 1,
 																		-AutoTrue=>1,
 																		) || croak( 'Trimurti::Vishnu::Config failed to load config file $config_file.' );
+	my $config = $config_reader->{config};
+	my $project_base = $config_file; $project_base =~ s/\/.*?$//; #keep path
 	
-	return $config_reader->{config};
+	my($filename, $directories) = File::Basename::fileparse($config_file);
+	
+	$config->{PROJECT}->{BASE} = $directories;
+	
+	return $config;
 }
 
 sub build_stash {
@@ -49,10 +56,19 @@ sub build_stash {
 	foreach my $config_element ( keys %{$stash->{CONFIG}} ) {
 		next if ( $config_element ) eq 'PROJECT'; #this is not an file group
 
+		#set NAME attribute to all file groups
+		$stash->{CONFIG}->{$config_element}->{NAME} = $config_element;
+		
+		#check for non array files and convert to single element array
+		if ( defined $stash->{CONFIG}->{$config_element}->{FILES} && ref $stash->{CONFIG}->{$config_element}->{FILES} ne 'ARRAY' ) {
+			$stash->{CONFIG}->{$config_element}->{FILES} = ( $stash->{CONFIG}->{$config_element}->{FILES} );
+		}
+
 		if ( defined $stash->{CONFIG}->{$config_element}->{ORDER} && isdigit $stash->{CONFIG}->{$config_element}->{ORDER} ) {
-			#all others are file groups to process		
+			#all others are file groups to process
 			push @{$stash->{FILE_GROUPS}}, $stash->{CONFIG}->{$config_element}
 		} else {
+			#put unordered groups apart to add on list tail
 			push @unsort_file_groups, $stash->{CONFIG}->{$config_element};
 		}
 	}
@@ -66,3 +82,5 @@ sub build_stash {
 	
 	return $stash;
 }
+
+1;

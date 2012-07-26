@@ -11,6 +11,7 @@ use Config::Simple;
 use Getopt::Long;
 use Log::Log4perl qw/:easy/;
 use Trimurti::Vishnu::Config;
+use Trimurti::Vishnu::FileGroup;
 use Data::Dumper;
 # ============================================================================
 
@@ -27,7 +28,27 @@ sub main {
 	$logger -> info('Building stash');
 	my $stash	= Trimurti::Vishnu::Config::build_stash( $config );
 	
-	print Data::Dumper::Dumper( $stash );
+	print Data::Dumper::dumper( $stash );
+	
+	if ( defined $stash->{CONFIG}->{$stash->{PROJECT}->{BEFORE}} ) {
+		$logger -> info('Processing file group BEFORE ' . $stash->{PROJECT}->{BEFORE});
+		Trimurti::Vishnu::FileGroup::process( $stash->{CONFIG}->{$stash->{PROJECT}->{BEFORE}} ) 
+	}
+	
+	foreach my $file_group ( @{$stash->{FILE_GROUPS}} ) {
+		#process non hidden file groups
+		if ( $file_group->{NAME} !~ /^\./ ) {
+			$logger -> info('Processing file group ' . $file_group->{NAME} );
+			Trimurti::Vishnu::FileGroup::process( $file_group );
+		} else {
+			$logger -> info('Skipping hidden file group ' . $file_group->{NAME} );
+		}
+	}
+	
+	if ( $stash->{CONFIG}->{$stash->{PROJECT}->{AFTER}} ) {
+		$logger -> info('Processing file group AFTER ' . $stash->{PROJECT}->{AFTER});
+		Trimurti::Vishnu::FileGroup::process( $stash->{CONFIG}->{$stash->{PROJECT}->{AFTER}} ) 
+	}
 	
 	$logger -> info('Will process ' . $config->{PROJECT}->{NAME} );
 	
