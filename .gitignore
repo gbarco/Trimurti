@@ -1,3 +1,4 @@
+# Ignore some Perl build files
 blib/
 .build/
 _build/
@@ -13,3 +14,17 @@ META.yml
 MYMETA.yml
 nytprof.out
 pm_to_blib
+
+# Ignore the following files/folders withing this project:
+*.bak
+*.old
+*.ppt
+*.mpg
+# AWS private credential stash!!!
+*.aws_credentials.txt
+
+# Komodo proyect files
+# v 5.x
+*.kpf
+# v 6.x
+*.komodoproject

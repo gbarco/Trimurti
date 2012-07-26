@@ -1,0 +1,20 @@
+<!--TRIMURTI TAG="NoWarnings"-->
+<!--TRIMURTI TAG="Cleanup::Disable"-->
+
+<!--TRIMURTI PREPROCESS="Download" url="http://www.time.gov/" output="time.html"--><!--Trimurti::Vishnu::PreProcess::Download({url=>'http://www.time.gov/',output='time.html'})-->
+<!--TRIMURTI STASH="Simple" mojo="{test:1}"--><!--Trimurti::Vishnu::Stash::Simple({mojo=>'{test:1}')-->
+<html>
+	<head>
+		<!--TRIMURTI INCLUDE="Inline" file="a.js" file="b.js"--><!--Trimurti::Vishnu::Include::Inline({file=>['a.js','b.js]})-->
+		<!--TRIMURTI INCLUDE="RunInline" command="ls -l *.txt|grep mojo"--><!--Trimurti::Vishnu::Include::RunInline()-->
+	</head>
+	<body>
+		<!--TRIMURTI INCLUDE="CustomFacebook" appid="1010" data="fbml"--><!--Trimurti::Vishnu::Include::CustomFacebook({appId=>'1010',data='fbml'})-->
+	</body>
+</html>
+<!--TRIMURTI POSTPROCESS="Compress" data="gzip"--><!--Trimurti::Vishnu::PostProcess::Compress({data=>'gzip'})-->
+<!--TRIMURTI POSTPROCESS="Cleanup" mode="extreme"--><!--Trimurti::Vishnu::PostProcess::Cleanup({mode=>'extreme'})-->
+<!--TRIMURTI POSTPROCESS="Lint"--><!--Trimurti::PostProcess::Lint-->
+<!--TRIMURTI POSTPROCESS="CustomCompletenessTest"--><!--Trimurti::Vishnu::PostProcess::CustomCompletenessTest()-->
+<!--TRIMURTI POSTPROCESS="Run" --><!--Trimurti::Vishnu::PostProcess::RunScript()-->
+<!--TRIMURTI POSTPROCESS="At" when="21:30" command="echo 'Built %THISFILE%' | mail gbarcouy@gmail"--><!--Trimurti::Vishnu::PostProcess::At(when=>"21:30",command=>"echo 'Built %THISFILE%' | mail gbarcouy@gmail")-->
