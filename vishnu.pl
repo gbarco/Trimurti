@@ -28,6 +28,8 @@ sub main {
 	$logger -> info('Building stash');
 	my $stash	= Trimurti::Vishnu::Config::build_stash( $config );
 	
+	chdir( $stash->{PROJECT}->{BASE} );
+	
 	print Data::Dumper::Dumper( $stash );
 	
 	if ( defined $stash->{CONFIG}->{$stash->{PROJECT}->{BEFORE}} ) {
@@ -49,7 +51,7 @@ sub main {
 	
 	if ( $stash->{CONFIG}->{$stash->{PROJECT}->{AFTER}} ) {
 		$logger -> info('Processing file group AFTER ' . $stash->{PROJECT}->{AFTER});
-		Trimurti::Vishnu::FileGroup::vishun( $stash->{CONFIG}->{$stash->{PROJECT}->{AFTER}} ) 
+		Trimurti::Vishnu::FileGroup::vishnu( $stash );
 	}
 	
 	$logger -> info('Will process ' . $config->{PROJECT}->{NAME} );

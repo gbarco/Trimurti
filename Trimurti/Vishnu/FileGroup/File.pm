@@ -24,24 +24,22 @@ sub vishnu {
 	
 	crock('No project base in ' . $stash->{PROJECT}->{NAME} ) unless defined $stash->{PROJECT}->{BASE};
 	
-	my ( $source_file ) = File::Spec->catfile( $stash->{PROJECT}->{BASE}, $stash->{THIS}->{FILE} );
-	my ( $destination_file ) = File::Spec->catfile( $stash->{PROJECT}->{BASE}, $stash->{THIS}->{FILE_GROUP}->{DESTINATION}, $stash->{THIS}->{FILE} );
+	my ( $source_file ) = $stash->{THIS}->{FILE}->{NAME};
+	my ( $destination_file ) = File::Spec->catfile( $stash->{THIS}->{FILE_GROUP}->{DESTINATION}, $stash->{THIS}->{FILE}->{NAME} );
 	
-	File::Path::make_path( File::Spec->catfile( $stash->{PROJECT}->{BASE}, $stash->{THIS}->{FILE_GROUP}->{DESTINATION} ) );
+	File::Path::make_path( $stash->{THIS}->{FILE_GROUP}->{DESTINATION} );
 	
-	open ( SOURCE_FILE, $source_file ) || croak('Failed to open ' . $source_file );
-	open ( DESTINATION_FILE, '>' . $destination_file) || croak('Failed to open ' . $destination_file );
-
-	$stash->{THIS}->{SOURCE_FILE_FH} = \*SOURCE_FILE;
-	$stash->{THIS}->{DESTINATION_FILE_FH} = \*DESTINATION_FILE;	
-	if ( $stash->{THIS}->{FILTER} eq 'HTML' ) {
+	$stash->{THIS}->{FILE}->{SOURCE_FILE_FH} = IO::File->new( $source_file ) || croak('Failed to open ' . $source_file );
+	$stash->{THIS}->{FILE}->{DESTINATION_FILE_FH} = IO::File->new( '>' . $destination_file) || croak('Failed to open ' . $destination_file );
+	if ( $stash->{THIS}->{FILTER}->{NAME} eq 'HTML' ) {
 		Trimurti::Vishnu::FileGroup::File::HTML::vishnu( $stash );
-	}	
-	undef $stash->{THIS}->{SOURCE_FILE_FH};
-	undef $stash->{THIS}->{DESTINATION_FILE_FH};
+	}
+	$stash->{THIS}->{FILE}->{SOURCE_FILE_FH}->close();
+	$stash->{THIS}->{FILE}->{DESTINATION_FILE_FH}->close();
 	
-	close ( SOURCE_FILE );
-	close ( DESTINATION_FILE );
+	undef $stash->{THIS}->{FILE}->{SOURCE_FILE_FH};
+	undef $stash->{THIS}->{FILE}->{DESTINATION_FILE_FH};
+	undef $stash->{THIS}->{FILE};
 }
 
 1;

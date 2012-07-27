@@ -99,7 +99,7 @@ sub build_stash {
 		
 		#check for non array files and convert to single element array
 		if ( defined $stash->{CONFIG}->{$config_element}->{FILES} && ref $stash->{CONFIG}->{$config_element}->{FILES} ne 'ARRAY' ) {
-			$stash->{CONFIG}->{$config_element}->{FILES} = ( $stash->{CONFIG}->{$config_element}->{FILES} );
+			$stash->{CONFIG}->{$config_element}->{FILES} = [ $stash->{CONFIG}->{$config_element}->{FILES} ];
 		}
 
 		if ( defined $stash->{CONFIG}->{$config_element}->{ORDER} && isdigit $stash->{CONFIG}->{$config_element}->{ORDER} ) {

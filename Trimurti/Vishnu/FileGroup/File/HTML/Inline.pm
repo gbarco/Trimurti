@@ -1,15 +1,13 @@
-package Trimurti::Vishnu::FileGroup;
+package Trimurti::Vishnu::FileGroup::File::HTML::Inline;
 
-use lib '../../';
+use lib '../../../../../';
 # ============================================================================
 # Handles configuration 
 # ============================================================================
 use strict;
 use warnings;
 use Carp qw( croak );
-
-# ============================================================================
-use Trimurti::Vishnu::FileGroup::File;
+use HTML::TokeParser;
 
 # ============================================================================
 require Exporter;
@@ -21,17 +19,23 @@ use vars qw($VERSION @ISA @EXPORT);
 # ============================================================================
 sub vishnu {
 	my ( $stash ) = @_;
+	my $text;
 	
-	foreach my $file ( @{$stash->{THIS}->{FILE_GROUP}->{FILES}}) {
-		#get filter and file in the form HTML:test.html
-		$file =~ /^(\w+):(.*)$/;
-		
-		$stash->{THIS}->{FILTER}->{NAME} = $1;
-		$stash->{THIS}->{FILE}->{NAME} = $2;
-		Trimurti::Vishnu::FileGroup::File::vishnu( $stash );
-		undef $stash->{THIS}->{FILTER}->{NAME};
-		undef $stash->{THIS}->{FILE}->{NAME};
+	foreach my $file ( @{$stash->{THIS}->{MODULE}->{DATA}} ) {
+		if ( $file =~ /file\s*=\s*["'](\S+)["']/ ) {
+			open( INLINE, $1) || croak('Could not open ' . $1);
+			binmode( INLINE );
+			my ( $data );
+			while ( read (INLINE, $data, 4096) != 0) {
+				$text .= $data;
+			}
+			close( INLINE );
+		} else {
+			croak('Unknown command');
+		}
 	}
+	
+	return $text;
 }
 
 1;
