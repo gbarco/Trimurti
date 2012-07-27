@@ -43,6 +43,43 @@ sub read_project_config {
 	return $config;
 }
 
+# STASH Format
+#'FILE_GROUPS' => [
+#		{
+#			'NAME' => 'statics',
+#			'FILES' => [
+#				'test.html',
+#				'test2.html'
+#			],
+#			'ORDER' => 1,
+#			'DESTINATION' => 'www.test.com/build/'
+#		},
+#		{
+#			'NAME' => 'generated',
+#			'FILES' => 'test3.html',
+#			'ORDER' => 2,
+#			'DESTINATION' => 'www.test.com/build/'
+#		},
+#		{
+#			'NAME' => '.tell_people',
+#			'RUN' => 'echo \'Built Vishnu test\' | mail gbarcouy@gmail.com'
+#		}
+#	],
+#	'PROJECT' => {
+#		'BASE' => 'tests/',
+#		'NAME' => 'Vishnu test',
+#		'AFTER' => '.tell_people',
+#		'GIT_TREEISH' => 'release',
+#		'BEFORE' => ''
+#	},
+#	'CONFIG' => {
+#		'statics' => $VAR1->{'FILE_GROUPS'}[0],
+#		'PROJECT' => $VAR1->{'PROJECT'},
+#		'.tell_people' => $VAR1->{'FILE_GROUPS'}[2],
+#		'generated' => $VAR1->{'FILE_GROUPS'}[1]
+#	}
+#};
+
 sub build_stash {
 	my $config = shift;
 	my $stash;
