@@ -1,5 +1,6 @@
 package Trimurti::Vishnu::FileGroup;
 
+use lib '../../';
 # ============================================================================
 # Handles configuration 
 # ============================================================================
@@ -18,13 +19,20 @@ use vars qw($VERSION @ISA @EXPORT);
 @EXPORT = qw(process);
 
 # ============================================================================
-sub process {
-	my ( $file_group, $stash ) = @_;
+sub vishnu {
+	my ( $stash ) = @_;
 	
-	crock('No file list in file group ' . $file_group->{NAME}) unless defined $file_group->{FILES};
+	crock('No file list in file group ' . $stash->{THIS}->{FILE_GROUP}->{NAME}) unless defined $stash->{THIS}->{FILE_GROUP}->{FILES};
 	
-	foreach my $file ( @{$file_group->{FILES}}) {
-		Trimurti::Vishnu::FileGroup::File::process( $file, $file_group, $stash );
+	foreach my $file ( @{$stash->{THIS}->{FILE_GROUP}->{FILES}}) {
+		#get filter and file in the form HTML:test.html
+		$file =~ /^(\w+):(.*)$/;
+		
+		$stash->{THIS}->{FILTER} = $1;
+		$stash->{THIS}->{FILE} = $2;
+		Trimurti::Vishnu::FileGroup::File::vishnu( $stash );
+		undef $stash->{THIS}->{FILTER} = $1;
+		undef $stash->{THIS}->{FILE} = $2;
 	}
 }
 

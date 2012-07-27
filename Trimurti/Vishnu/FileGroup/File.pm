@@ -1,5 +1,6 @@
 package Trimurti::Vishnu::FileGroup::File;
 
+use lib '../../../';
 # ============================================================================
 # Handles configuration 
 # ============================================================================
@@ -8,6 +9,7 @@ use warnings;
 use Carp qw( croak );
 use File::Spec;
 use File::Path;
+use Trimurti::Vishnu::FileGroup::File::HTML;
 
 # ============================================================================
 require Exporter;
@@ -17,34 +19,31 @@ use vars qw($VERSION @ISA @EXPORT);
 @EXPORT = qw(process);
 
 # ============================================================================
-sub process {
-	my ( $file, $file_group, $stash ) = @_;
+sub vishnu {
+	my ( $stash ) = @_;
 	
 	crock('No project base in ' . $stash->{PROJECT}->{NAME} ) unless defined $stash->{PROJECT}->{BASE};
 	
-	my ( $source_file ) = File::Spec->catfile( $stash->{PROJECT}->{BASE}, $file );
-	my ( $destination_file ) = File::Spec->catfile( $stash->{PROJECT}->{BASE}, $file_group->{DESTINATION}, $file );
+	my ( $source_file ) = File::Spec->catfile( $stash->{PROJECT}->{BASE}, $stash->{THIS}->{FILE} );
+	my ( $destination_file ) = File::Spec->catfile( $stash->{PROJECT}->{BASE}, $stash->{THIS}->{FILE_GROUP}->{DESTINATION}, $stash->{THIS}->{FILE} );
 	
-	File::Path::make_path( File::Spec->catfile( $stash->{PROJECT}->{BASE}, $file_group->{DESTINATION} ) );
+	File::Path::make_path( File::Spec->catfile( $stash->{PROJECT}->{BASE}, $stash->{THIS}->{FILE_GROUP}->{DESTINATION} ) );
 	
 	open ( SOURCE_FILE, $source_file ) || croak('Failed to open ' . $source_file );
 	open ( DESTINATION_FILE, '>' . $destination_file) || croak('Failed to open ' . $destination_file );
-
-	&rewrite( \*SOURCE_FILE, \*DESTINATION_FILE, $stash );
+	
+	my $filter = 'Trimurti::Vishnu::FileGroup::File::' . $stash->{THIS}->{FILTER};
+	
+	require $filter || croack( 'Failed to load filter ' . $filter . ' with error ' . $@ );
+	
+	$stash->{THIS}->{SOURCE_FILE_FH} = \*SOURCE_FILE;
+	$stash->{THIS}->{DESTINATION_FILE_FH} = \*DESTINATION_FILE;
+	eval("$filter::vishnu( \$stash );");
+	undef $stash->{THIS}->{SOURCE_FILE_FH};
+	undef $stash->{THIS}->{DESTINATION_FILE_FH};
 	
 	close ( SOURCE_FILE );
 	close ( DESTINATION_FILE );
-}
-
-sub rewrite {
-	#read each line and load modules to process VISHNU TAGS
-	my ( $source_file, $destination_file, $stash ) = @_;
-	
-	while ( my $source_line = <$source_file> ) {
-		if ( $source_line =~ /<!--\s*VISHNU\s*TAG=["'](\S+?)["']\s*-->/ ) {
-			
-		}
-	}
 }
 
 1;

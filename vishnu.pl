@@ -39,7 +39,9 @@ sub main {
 		#process non hidden file groups
 		if ( $file_group->{NAME} !~ /^\./ ) {
 			$logger -> info('Processing file group ' . $file_group->{NAME} );
-			Trimurti::Vishnu::FileGroup::process( $file_group, $stash );
+			$stash->{THIS}->{FILE_GROUP} = $stash->{CONFIG}->{$file_group->{NAME}};
+			Trimurti::Vishnu::FileGroup::vishnu( $stash );
+			undef $stash->{THIS}->{FILE_GROUP};
 		} else {
 			$logger -> info('Skipping hidden file group ' . $file_group->{NAME} );
 		}
@@ -47,7 +49,7 @@ sub main {
 	
 	if ( $stash->{CONFIG}->{$stash->{PROJECT}->{AFTER}} ) {
 		$logger -> info('Processing file group AFTER ' . $stash->{PROJECT}->{AFTER});
-		Trimurti::Vishnu::FileGroup::process( $stash->{CONFIG}->{$stash->{PROJECT}->{AFTER}} ) 
+		Trimurti::Vishnu::FileGroup::vishun( $stash->{CONFIG}->{$stash->{PROJECT}->{AFTER}} ) 
 	}
 	
 	$logger -> info('Will process ' . $config->{PROJECT}->{NAME} );

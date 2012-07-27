@@ -5,20 +5,17 @@
 	BEFORE=
 	AFTER=.tell_people
 </PROJECT>
-
 <statics>
 	ORDER=1
-	FILES=test.html
-	FILES=test2.html
+	FILES=HTML:test.html
+	FILES=HTML:test2.html
 	DESTINATION="www.test.com/build/"
 </statics>
-
 <generated>
 	ORDER=2
-	FILES=test3.html
+	FILES=HTML:test3.html
 	DESTINATION=www.test.com/build/
 </generated>
-
 <.tell_people>
 	RUN="echo 'Built Vishnu test' | mail gbarcouy@gmail.com"
 </tell_people>
