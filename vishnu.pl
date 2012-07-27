@@ -28,7 +28,7 @@ sub main {
 	$logger -> info('Building stash');
 	my $stash	= Trimurti::Vishnu::Config::build_stash( $config );
 	
-	print Data::Dumper::dumper( $stash );
+	print Data::Dumper::Dumper( $stash );
 	
 	if ( defined $stash->{CONFIG}->{$stash->{PROJECT}->{BEFORE}} ) {
 		$logger -> info('Processing file group BEFORE ' . $stash->{PROJECT}->{BEFORE});
@@ -39,7 +39,7 @@ sub main {
 		#process non hidden file groups
 		if ( $file_group->{NAME} !~ /^\./ ) {
 			$logger -> info('Processing file group ' . $file_group->{NAME} );
-			Trimurti::Vishnu::FileGroup::process( $file_group );
+			Trimurti::Vishnu::FileGroup::process( $file_group, $stash );
 		} else {
 			$logger -> info('Skipping hidden file group ' . $file_group->{NAME} );
 		}

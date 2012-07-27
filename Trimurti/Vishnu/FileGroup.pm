@@ -8,7 +8,7 @@ use warnings;
 use Carp qw( croak );
 
 # ============================================================================
-use FileGroup::File;
+use Trimurti::Vishnu::FileGroup::File;
 
 # ============================================================================
 require Exporter;
@@ -21,7 +21,9 @@ use vars qw($VERSION @ISA @EXPORT);
 sub process {
 	my ( $file_group, $stash ) = @_;
 	
-	foreach my $file ( @$file_group->{FILES}) {
+	crock('No file list in file group ' . $file_group->{NAME}) unless defined $file_group->{FILES};
+	
+	foreach my $file ( @{$file_group->{FILES}}) {
 		Trimurti::Vishnu::FileGroup::File::process( $file, $file_group, $stash );
 	}
 }
