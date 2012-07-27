@@ -36,7 +36,7 @@ sub vishnu {
 			
 			if ( $text =~ /<!--\s*VISHNU\s*TAG=["'](\S+)?["']\s*((?:\S+\s*=\S+\s*)+)?-->/ ) {
 				my ( $tag, $data) = ($1, $2);
-				my ( @tag_data ) = split( /\s+/,$data);
+				my ( @tag_data ) = split( /\s+/,$data) if defined $data;
 				#kill extra spaces before and after each key
 				@tag_data = map s/^\s+(\S+)\s+=(.*)$/$1=$2/g,@tag_data;
 				

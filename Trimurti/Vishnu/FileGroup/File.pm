@@ -31,14 +31,12 @@ sub vishnu {
 	
 	open ( SOURCE_FILE, $source_file ) || croak('Failed to open ' . $source_file );
 	open ( DESTINATION_FILE, '>' . $destination_file) || croak('Failed to open ' . $destination_file );
-	
-	my $filter = 'Trimurti::Vishnu::FileGroup::File::' . $stash->{THIS}->{FILTER};
-	
-	require $filter || croack( 'Failed to load filter ' . $filter . ' with error ' . $@ );
-	
+
 	$stash->{THIS}->{SOURCE_FILE_FH} = \*SOURCE_FILE;
-	$stash->{THIS}->{DESTINATION_FILE_FH} = \*DESTINATION_FILE;
-	eval("$filter::vishnu( \$stash );");
+	$stash->{THIS}->{DESTINATION_FILE_FH} = \*DESTINATION_FILE;	
+	if ( $stash->{THIS}->{FILTER} eq 'HTML' ) {
+		Trimurti::Vishnu::FileGroup::File::HTML::vishnu( $stash );
+	}	
 	undef $stash->{THIS}->{SOURCE_FILE_FH};
 	undef $stash->{THIS}->{DESTINATION_FILE_FH};
 	
