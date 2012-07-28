@@ -30,7 +30,6 @@ sub vishnu {
 			#comments might be VISHNUsomething
 			my $text = $token->[1];
 			
-			
 			if ( $text =~ /<!--\s*VISHNU\s*(.*?)\s*-->/ ) {
 				#this is VISHNUish
 				my $vishnu_text = $1;
@@ -46,27 +45,22 @@ sub vishnu {
 					if ( $command eq 'PREPROCESS' ) {
 					} elsif ( $command eq 'TAG' ) {
 					} elsif ( $command eq 'INCLUDE' ) {
-						&_include( $stash );
+						$text = _include( $stash );
 					} elsif ( $command eq 'POSTPROCESS' ) {
 					}
 					
-				} elsif ( $vishnu_text =~ /TAG\s*=\s*["'](\S+)?["']\s*(.*)/ ) {
-				} elsif ( $vishnu_text =~ /INCLUDE\s*=\s*["'](\S+)?["']\s*(.*)/ ) {
-					$text = _includes( $1, $2 );
-					
-					
-				} elsif ( $vishnu_text =~ /POSTPROCESS\s*=\s*["'](\S+)?["']\s*(.*)/ ) {
+					$stash->{THIS}->{FILE}->{DESTINATION_FILE_FH}->print( $text ) if defined $text;
 				}
 			} else {
 				#copy non VISHNU TAGS verbatim
 				my $text = _text_verbatim( $token );
 				
-				$stash->{THIS}->{FILE}->{DESTINATION_FILE_FH}->print( $text ) if ( defined $text && $text ne "\n" );
+				$stash->{THIS}->{FILE}->{DESTINATION_FILE_FH}->print( $text ) if ( defined $text );
 			}
 		} else {
 			my $text = _text_verbatim( $token );
 			
-			$stash->{THIS}->{FILE}->{DESTINATION_FILE_FH}->print( $text ) if ( defined $text && $text ne "\n" );
+			$stash->{THIS}->{FILE}->{DESTINATION_FILE_FH}->print( $text ) if ( defined $text );
 		}
 	}	
 }
@@ -90,7 +84,7 @@ sub _text_verbatim {
 	if ( $token->[0] eq 'S') {
 		$text = $token->[4];
 	} elsif ( $token->[0] eq 'E') {
-		$text = $token->[1];
+		$text = $token->[2];
 	} elsif ( $token->[0] eq 'T') {
 		$text = $token->[1];
 	} elsif ( $token->[0] eq 'D') {
