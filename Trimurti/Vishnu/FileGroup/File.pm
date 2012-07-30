@@ -1,6 +1,5 @@
 package Trimurti::Vishnu::FileGroup::File;
 
-use lib '../../../';
 # ============================================================================
 # Handles configuration 
 # ============================================================================
@@ -29,16 +28,13 @@ sub vishnu {
 	
 	File::Path::make_path( $stash->{THIS}->{FILE_GROUP}->{DESTINATION} );
 	
-	$stash->{THIS}->{FILE}->{SOURCE_FILE_FH} = IO::File->new( $source_file ) || croak('Failed to open ' . $source_file );
-	$stash->{THIS}->{FILE}->{DESTINATION_FILE_FH} = IO::File->new( '>' . $destination_file) || croak('Failed to open ' . $destination_file );
+	$stash->{THIS}->{FILE}->{SOURCE_PATH} = $source_file;
+	$stash->{THIS}->{FILE}->{DESTINATION_PATH} = $destination_file;
+	
 	if ( $stash->{THIS}->{FILTER}->{NAME} eq 'HTML' ) {
 		Trimurti::Vishnu::FileGroup::File::HTML::vishnu( $stash );
 	}
-	$stash->{THIS}->{FILE}->{SOURCE_FILE_FH}->close();
-	$stash->{THIS}->{FILE}->{DESTINATION_FILE_FH}->close();
 	
-	undef $stash->{THIS}->{FILE}->{SOURCE_FILE_FH};
-	undef $stash->{THIS}->{FILE}->{DESTINATION_FILE_FH};
 	undef $stash->{THIS}->{FILE};
 }
 

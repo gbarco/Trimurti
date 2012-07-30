@@ -39,7 +39,7 @@ sub read_project_config {
 	
 	my($filename, $directories) = File::Basename::fileparse($config_file);
 	
-	$config->{PROJECT}->{BASE} = $directories;
+	$config->{PROJECT}->{BASE} = File::Spec->rel2abs( $directories );
 	
 	return $config;
 }

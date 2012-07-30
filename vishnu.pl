@@ -1,5 +1,8 @@
 #!/usr/bin/perl
 
+use FindBin;
+use lib $FindBin::Bin;
+
 # ====== VISHNU =============================================================
 use strict;
 use warnings;
@@ -19,6 +22,7 @@ use Data::Dumper;
 # MAIN
 # ============================================================================
 sub main {
+	my $old_dir =  Cwd::getcwd;
 	my $logger = setup_logging();
 	$logger -> info('Starting Vishnu ' . $VERSION);
 
@@ -57,6 +61,8 @@ sub main {
 	$logger -> info('Will process ' . $config->{PROJECT}->{NAME} );
 	
 	$logger -> info('Ending Vishnu ' . $VERSION);
+	
+	chdir( $old_dir );
 }
 
 # ============================================================================

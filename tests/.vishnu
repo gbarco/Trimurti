@@ -5,17 +5,18 @@
 	BEFORE=
 	AFTER=.tell_people
 </PROJECT>
-<statics>
+<filters>
 	ORDER=1
-	FILES=HTML:test.html
-	FILES=HTML:test2.html
+	FILES=HTML:test_filter_script.html
+	FILES=HTML:test_filter_markdown.html
+	FILES=HTML:test_filter_excel.html
 	DESTINATION="www.test.com/build/"
-</statics>
-<generated>
+</filters>
+<generator>
 	ORDER=2
-	FILES=HTML:test3.html
-	DESTINATION=www.test.com/build/
-</generated>
+	FILES=HTML:test_generator.html
+	DESTINATION=www.test.com/build/generator
+</generator>
 <.tell_people>
 	RUN="echo 'Built Vishnu test' | mail gbarcouy@gmail.com"
 </tell_people>
