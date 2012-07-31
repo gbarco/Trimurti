@@ -6,9 +6,6 @@ package Trimurti::Vishnu::FileGroup::File;
 use strict;
 use warnings;
 use Carp qw( croak );
-use File::Spec;
-use File::Path;
-use Trimurti::Vishnu::FileGroup::File::HTML;
 
 # ============================================================================
 require Exporter;
@@ -24,15 +21,17 @@ sub vishnu {
 	crock('No project base in ' . $stash->{PROJECT}->{NAME} ) unless defined $stash->{PROJECT}->{BASE};
 	
 	my ( $source_file ) = $stash->{THIS}->{FILE}->{NAME};
-	my ( $destination_file ) = File::Spec->catfile( $stash->{THIS}->{FILE_GROUP}->{DESTINATION}, $stash->{THIS}->{FILE}->{NAME} );
-	
-	File::Path::make_path( $stash->{THIS}->{FILE_GROUP}->{DESTINATION} );
+	my ( $destination_file ) = $stash->{THIS}->{FILE}->{NAME};
 	
 	$stash->{THIS}->{FILE}->{SOURCE_PATH} = $source_file;
 	$stash->{THIS}->{FILE}->{DESTINATION_PATH} = $destination_file;
 	
-	if ( $stash->{THIS}->{FILTER}->{NAME} eq 'HTML' ) {
+	if ( uc ( $stash->{THIS}->{FILTER}->{NAME} ) eq 'HTML' ) {
+		require Trimurti::Vishnu::FileGroup::File::HTML;
 		Trimurti::Vishnu::FileGroup::File::HTML::vishnu( $stash );
+	} elsif ( uc ( $stash->{THIS}->{FILTER}->{NAME} ) eq 'STATIC' ) {
+		require Trimurti::Vishnu::FileGroup::File::Static;
+		Trimurti::Vishnu::FileGroup::File::Static::vishnu( $stash );
 	}
 	
 	undef $stash->{THIS}->{FILE};

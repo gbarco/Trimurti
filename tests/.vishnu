@@ -12,11 +12,22 @@
 	FILES=HTML:test_filter_excel.html
 	DESTINATION="www.test.com/build/"
 </filters>
+<generator.statics>
+	ORDER=1.9
+	FILES=STATIC:1.png
+	FILES=STATIC:2.png
+	DESTINATION="www.test.com/build/generator/img"
+</generator.statics>
 <generator>
 	ORDER=2
 	FILES=HTML:test_generator.html
 	DESTINATION=www.test.com/build/generator
 </generator>
+<tt_use>
+	ORDER=3
+	FILES=HTML:test_stash.html
+	DESTINATION="www.test.com/build/"
+</tt_use>
 <.tell_people>
-	RUN="echo 'Built Vishnu test' | mail gbarcouy@gmail.com"
+	ACTION="echo 'Built Vishnu test' | mail gbarcouy@gmail.com"
 </tell_people>

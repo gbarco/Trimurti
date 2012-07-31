@@ -6,12 +6,11 @@ package Trimurti::Vishnu::FileGroup::File::HTML;
 use strict;
 use warnings;
 use Carp qw( croak );
-use Text::Markdown;
 
 use Template;
 use Template::Provider;
 use Template::Parser;
-use File::Spec;
+use Template::Stash;
 
 # ============================================================================
 require Exporter;
@@ -24,11 +23,15 @@ use vars qw($VERSION @ISA @EXPORT);
 sub vishnu {
 	my ( $stash ) = @_;
 	
+	my $tt_stash = Template::Stash->new();
+	$tt_stash->{VISHNU} = $stash;
+	
 	my $tt = Template->new({
 			PRE_CHOMP  => 1,
 			POST_CHOMP => 1,
 			TAG_STYLE => 'html',
 			ENCODING => 'utf8', #force utf8 encoding for templates
+			STASH => $tt_stash,
 			LOAD_TEMPLATES => [ Template::Provider->new( INCLUDE_PATH => $stash->{PROJECT}->{BASE} ) ],
 			PLUGIN_BASE => [
 											'Trimurti::Vishnu::FileGroup::File::HTML::Filter',
@@ -44,13 +47,13 @@ sub vishnu {
         default => '0',     # foo.html => file:foo.html
 			},
 			OUTPUT => $stash->{THIS}->{FILE}->{DESTINATION_PATH},
-			OUTPUT_PATH => File::Spec->catfile( $stash->{PROJECT}->{BASE}, $stash->{THIS}->{FILE_GROUP}->{DESTINATION} ),
+			OUTPUT_PATH => $stash->{THIS}->{FILE_GROUP}->{DESTINATION},
 	});
 	
 	$tt->process(
 		$stash->{THIS}->{FILE}->{SOURCE_PATH},
 		$stash->{THIS},
-	) || croak( $tt->error() . ' processing ' . $stash->{THIS}->{FILE} );
+	) || croak( $tt->error() . ' processing ' . $stash->{THIS}->{FILE}->{SOURCE_PATH} );
 }
 
 1;

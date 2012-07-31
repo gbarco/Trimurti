@@ -6,6 +6,7 @@ package Trimurti::Vishnu::FileGroup;
 use strict;
 use warnings;
 use Carp qw( croak );
+use File::Path;
 
 # ============================================================================
 use Trimurti::Vishnu::FileGroup::File;
@@ -27,6 +28,7 @@ sub vishnu {
 		
 		$stash->{THIS}->{FILTER}->{NAME} = $1;
 		$stash->{THIS}->{FILE}->{NAME} = $2;
+		
 		Trimurti::Vishnu::FileGroup::File::vishnu( $stash );
 		undef $stash->{THIS}->{FILTER}->{NAME};
 		undef $stash->{THIS}->{FILE}->{NAME};
