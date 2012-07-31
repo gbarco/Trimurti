@@ -11,7 +11,7 @@ use Text::Markdown;
 use Template;
 use Template::Provider;
 use Template::Parser;
-use IO::File;
+use File::Spec;
 
 # ============================================================================
 require Exporter;
@@ -43,7 +43,8 @@ sub vishnu {
         #http    => '1',     # http:foo.html
         default => '0',     # foo.html => file:foo.html
 			},
-			OUTPUT => $stash->{THIS}->{FILE}->{DESTINATION_PATH}
+			OUTPUT => $stash->{THIS}->{FILE}->{DESTINATION_PATH},
+			OUTPUT_PATH => File::Spec->catfile( $stash->{PROJECT}->{BASE}, $stash->{THIS}->{FILE_GROUP}->{DESTINATION} ),
 	});
 	
 	$tt->process(

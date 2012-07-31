@@ -1,12 +1,24 @@
 [% TAGS html %]
+<!-- USE Excel -->
+<!-- rows = Excel.excel('test.xls') -->
+<!-- FOREACH row IN rows -->
+<!-- filename = row.Articulo _ ".html" | uri --> 
+<!-- FILTER redirect( filename ) -->
 <html>
 	<head>
-		<!-- USE EncloseTag -->
-		<!-- FILTER $EncloseTag tag='script' -->
-		<!-- INCLUDE file:js/test_inline.js -->
-		<!-- INCLUDE file:js/test_inline.js -->
-		<!-- END -->
 	</head>
+		<table>
+		<thead><tr><th>Articulo</th><th>Descripción</th><th>Precio</th></tr></thead>
+		<tbody>
+			<tr>
+				<td><!-- row.Articulo --></td>
+				<td><!-- row.Descripcion --></td>
+				<td><!-- row.Precio --></td>
+			</tr>
+		</tbody>
+		</table>
 	<body>
 	</body>
 </html>
+<!-- END -->
+<!-- END -->
