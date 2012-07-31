@@ -1,0 +1,20 @@
+<PROJECT>
+	NAME=Vishnu test
+	GIT_TREEISH=release
+	BEFORE=
+	AFTER=.tell_people
+</PROJECT>
+<generator>
+	ORDER=1
+	FILES=<Articulo%20[1-10].html>
+	ORIGIN="www.test.com/build/generator"
+	DESTINATION=ssh://10.152.18.4:222/
+	CREDENTIALS=.credentials
+</generator>
+<static>
+	ORDER=2
+	FILES=<Articulo%20[1-10].html>
+	ORIGIN="www.test.com/build/generator"
+	DESTINATION=ftp://10.152.18.4:21/
+	CREDENTIALS=.credentials
+</static>
