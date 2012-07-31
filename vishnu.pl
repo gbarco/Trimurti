@@ -33,8 +33,6 @@ sub main {
 	
 	chdir( $stash->{PROJECT}->{BASE} );
 	
-	print Data::Dumper::Dumper( $stash );
-	
 	if ( defined $stash->{CONFIG}->{$stash->{PROJECT}->{BEFORE}} ) {
 		$logger -> info('Processing file group BEFORE ' . $stash->{PROJECT}->{BEFORE});
 		Trimurti::Vishnu::FileGroup::process( $stash->{CONFIG}->{$stash->{PROJECT}->{BEFORE}} ) 
