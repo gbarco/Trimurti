@@ -7,7 +7,7 @@
 </PROJECT>
 <filters>
 	ORDER=1
-	FILES=HTML:test_filter_script.html
+	FILES=HTML:test_filter_enclosetag.html
 	FILES=HTML:test_filter_markdown.html
 	FILES=HTML:test_filter_excel.html
 	DESTINATION="www.test.com/build/"

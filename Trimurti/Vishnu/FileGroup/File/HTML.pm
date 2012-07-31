@@ -29,7 +29,7 @@ sub vishnu {
 			POST_CHOMP => 1,
 			TAG_STYLE => 'html',
 			ENCODING => 'utf8', #force utf8 encoding for templates
-			LOAD_TEMPLATES => [ Template::Provider->new( INCLUDE_PATH =>  $stash->{PROJECT}->{BASE} ) ],
+			LOAD_TEMPLATES => [ Template::Provider->new( INCLUDE_PATH => $stash->{PROJECT}->{BASE} ) ],
 			PLUGIN_BASE => [
 											'Trimurti::Vishnu::FileGroup::File::HTML::Filter',
 											'Trimurti::Vishnu::FileGroup::File::HTML::Plugin',
