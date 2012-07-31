@@ -1,3 +1,4 @@
+(plugin:)?((?:s3|file|scp|rsync|ssh|telnet|http|ftp|https|ftps|sftp)://)+((?:[a-zA-Z0-9\._-]+\.[a-zA-Z]{2,6})|(?:[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:(?:[0-9]+))?(/[a-zA-Z0-9\&amp;%_\./-~-]*)?
 <PROJECT>
 	NAME=Vishnu test
 	GIT_TREEISH=release
