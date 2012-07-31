@@ -22,8 +22,15 @@ sub excel {
 		my $excel = Spreadsheet::ParseExcel::Simple->read( $file );
 		
 		foreach my $sheet ($excel->sheets) {
+			@titles = $sheet->next_row if ( $sheet->has_data() );
+			
 			while ( $sheet->has_data() ) {
-        my @data = $sheet->next_row;
+        my @row = $sheet->next_row;
+				my $row;
+				for( my $i=0; $i < @row; $i++ ) {
+					$row->{$titles[$i]} = $row[$i];
+				}
+				push @data, $row;
 			}
 		}
 		

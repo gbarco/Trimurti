@@ -2,10 +2,19 @@
 <html>
 	<head>
 		<!-- USE Excel -->
-		<!-- data = Excel.excel('lines.xls') -->
-		<!-- FOREACH row IN data -->
+		<!-- rows = Excel.excel('test.xls') -->
+		<table>
+		<thead><tr><th>Articulo</th><th>Descripción</th><th>Precio</th></tr></thead>
+		<!-- FOREACH row IN rows --> 
+		<tbody>
+			<tr>
+				<td><!-- row.Articulo --></td>
+				<td><!-- row.Descripcion --></td>
+				<td><!-- row.Precio --></td>
+			</tr>
+		</tbody>
 		<!-- END -->
-		<!-- END -->
+		</table>
 	</head>
 	<body>
 	</body>

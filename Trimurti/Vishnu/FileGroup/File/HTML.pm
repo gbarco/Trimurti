@@ -27,9 +27,7 @@ sub vishnu {
 	my $tt = Template->new({
 			PRE_CHOMP  => 1,
 			POST_CHOMP => 1,
-			TAG_STYLE => 'asp',
-			#START_TAG => quotemeta('<!--'),
-			#END_TAG   => quotemeta('-->'),
+			TAG_STYLE => 'html',
 			ENCODING => 'utf8', #force utf8 encoding for templates
 			LOAD_TEMPLATES => [ Template::Provider->new( INCLUDE_PATH =>  $stash->{PROJECT}->{BASE} ) ],
 			PLUGIN_BASE => [
