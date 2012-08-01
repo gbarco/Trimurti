@@ -1,0 +1,18 @@
+[% TAGS html %]
+<!-- USE CSSPacker -->
+<!-- USE JSPacker -->
+<!-- USE EncloseTag -->
+<html>
+	<head>
+		<!-- INCLUDE css/somecss.css | $CSSPacker | $EncloseTag tag="style" -->
+		<!-- INCLUDE js/jquery.uncompressed.js | $JSPacker compress="minify" | $EncloseTag tag="script" -->
+	</head>
+	<body>
+		<h1 id="coso">Inlined, minified, jQuery...</h1>
+		<script>
+			$(document).ready(function(){
+				$("#coso").animate({left: '+200px'}, 5000).animate({left: '-200px'}, 5000);
+			});
+		</script>
+	</body>
+</html>
