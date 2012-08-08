@@ -49,17 +49,13 @@ var BZip2 = (function() {
 	
 	//mask long function name for YUI optimization
 	function charCodeAt(what, at) {
-		return what.charCodeAt(at);
+		return what.charCodeAt(at) & 255;
 	}
 	
 	function readbits( what, how_much) {
 		return what.readbits(how_much);
 	}
 	
-	function readbits2( what, how_much) {
-		return what.readbits2(how_much);
-	}
-
 	/**
 	 * @class RBitfield
 	 * right-sided bitfield for reading bits in byte from right to left
@@ -67,23 +63,10 @@ var BZip2 = (function() {
 	var RBitfield;
 	(function () {
 		RBitfield = function(x) {
-			this.masks = [];
-			for (var i = 0; i < 31; i++) this.masks[i] = (1 << i) - 1;
-			this.masks[31] = -0x80000000;
-			//eliminated support for RBitfield.init( RBitfield ), never used, Gonzalo
 			this.f = x;
 			this.bits = this.bitfield = this.count = 0;
 		};
 		RBitfield.prototype = {
-			// since js truncate args to int32 with bit operators
-			// we need to specific processing for n >= 32 bits reading
-			// separate function is created for optimization purposes
-			// readbits2 always called with constants >=32, check removed, Gonzalo
-			readbits2:function(n) {
-				//only for n>=32!!!, check removed
-				var n2 = n >> 1;
-				return readbits(this, n2) * (1 << n2) + readbits(this, n - n2);
-			},
 			readbits:function(n) {
 				var m, r;
 				
@@ -92,9 +75,9 @@ var BZip2 = (function() {
 					this.bits += 8;
 				}
 				
-				m = this.masks[n];
-				r = (this.bitfield >> (this.bits - n)) & m;
+				m = (1 << n) - 1;
 				this.bits -= n;
+				r = (this.bitfield >> this.bits) & m;
 				this.bitfield &= ~ (m << this.bits);
 				return r;
 			}
@@ -179,7 +162,7 @@ var BZip2 = (function() {
 			//.padding:0..7                   = align to whole byte
 			var input_as_bits = new RBitfield(input);
 			//check .magic == 'BZ' and .version = 'h'
-			if ( readbits(input_as_bits, 16) != 16986 || readbits(input_as_bits,8) != 104) throw Error;
+			if ( readbits(input_as_bits, 24) != 0x425A68 ) throw Error; //Bzip 1.05 magic is BZh (BZ\0 is an error)
 
 			//get .hundred_k_blocksize from ASCII->1..9 range or error
 			var blocksize = readbits(input_as_bits,8) - 48;
@@ -192,20 +175,18 @@ var BZip2 = (function() {
 				var blocktype = [readbits(input_as_bits,16),readbits(input_as_bits,16),readbits(input_as_bits,16)];
 				var crc = [readbits(input_as_bits,16),readbits(input_as_bits,16)];
 				if (blocktype[0] == 0x3141 && blocktype[1] == 0x5926 && blocktype[2] == 0x5359) { // (pi)
-					if (readbits(input_as_bits,1)) throw Error('a');//throw "Bzip2 randomised support not implemented";
+					if (readbits(input_as_bits,1)) throw Error;//throw "Bzip2 randomised support not implemented";
 					var pointer = readbits(input_as_bits,24);
 					
 					//inlined: getUsedCharGroups
-					var used = [], m1, m2;
-					var used_groups = readbits(input_as_bits,16);
+					var inUse256 = [], m1, m2;
+					var used_groups = readbits(input_as_bits, 16);
 					for (m1 = 1 << 15; m1 > 0; m1 >>= 1) {
-						if (!(used_groups & m1)) {
-							for (var i = 0; i < 16; i++) used.push(false);
-							continue;
-						}
-						var used_chars = readbits(input_as_bits,16);
-						for (m2 = 1 << 15; m2 > 0; m2 >>= 1) {
-							used.push(Boolean(used_chars & m2));
+						if ( used_groups & m1 ) {
+							var used_chars = readbits(input_as_bits, 16);
+							for (m2 = 1 << 15; m2 > 0; m2 >>= 1) inUse256.push( Boolean(used_chars & m2) );
+						} else {
+							for (m2 = 0; m2 < 16; m2++) inUse256.push( 1<1 ); //false!
 						}
 					}
 
@@ -224,7 +205,7 @@ var BZip2 = (function() {
 					var groups_lengths = [];
 
 					// INLINE: sum used only once, Gonzalo
-					var symbols_in_use = used.reduce(function(a, b) { return a + b }, 0) + 2; //sum(used) + 2 // remember RUN[AB] RLE symbols
+					var symbols_in_use = inUse256.reduce(function(a, b) { return a + b }, 0) + 2; //sum(inUse256) + 2 // remember RUN[AB] RLE symbols
 
 					for (var j = 0; j < huffman_groups; j++) {
 						var length = readbits(input_as_bits,5);
@@ -244,8 +225,8 @@ var BZip2 = (function() {
 					}
 					
 					var favourites = [];
-					for (var c = used.length - 1; c >= 0; c--) {
-						if (used[c]) favourites.push(String.fromCharCode(c)); //inlined chr, used once, Gonzalo
+					for (var c = inUse256.length - 1; c >= 0; c--) {
+						if (inUse256[c]) favourites.push(String.fromCharCode(c)); //inlined chr, used once, Gonzalo
 					}
 					favourites.reverse();
 					
@@ -267,7 +248,7 @@ var BZip2 = (function() {
 								input_as_bits.bits += 8;
 							}
 							if (r = t.faht[bb][input_as_bits.bitfield >> (input_as_bits.bits - bb)]) {
-								input_as_bits.bitfield &= input_as_bits.masks[input_as_bits.bits -= bb];
+								input_as_bits.bitfield &= (1 << (input_as_bits.bits -= bb)) - 1;
 								r = r.code;
 								break;
 							}
