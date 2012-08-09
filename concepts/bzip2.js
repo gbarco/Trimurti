@@ -20,7 +20,7 @@ var BZip2 = (function() {
 	function bwt_reverse(src, primary) {
 		var len = src.length, A = src,
 			i, start = {}, links = [],
-			ii = primary, first, ret = [],
+			ii = primary, first, ret = '',
 			j;
 		if (primary >= len) throw Error;//throw RangeError("Out of bound");
 		if (primary < 0) throw Error;//throw RangeError("Out of bound");
@@ -35,21 +35,24 @@ var BZip2 = (function() {
 		
 		first = A[ii];
 		
-		for (j = 1; j < len; j++) ret.push(A[ii = links[ii]]);
+		for (j = 1; j < len; j++) ret=(A[ii = links[ii]]) + ret;
 		
-		return first + ret.reverse().join('');
+		return first + ret;
 	}
 
 	//move_to_front is always used to store result in array, optimized, Gonzalo
 	function move_to_front_and_store(a, c, buff) {
-		var v = a[c], i;
-		for (i = c; i > 0; a[i] = a[--i]);
-		buff.push(a[0] = v);
+		var v = a[c];
+		
+		a.splice(c,1); //remove element at c
+		a.splice(0,0,v); //add v at the beginning
+		
+		buff.push(v);
 	}
 	
 	//mask long function name for YUI optimization
 	function charCodeAt(what, at) {
-		return what.charCodeAt(at) & 255;
+		return what.charCodeAt(at);
 	}
 	
 	function readbits( what, how_much) {
@@ -168,13 +171,13 @@ var BZip2 = (function() {
 			var blocksize = readbits(input_as_bits,8) - 48;
 			if (blocksize < 1 || blocksize > 9) throw Error;//throw "Unknown (not size '1'-'9') Bzip2 blocksize";
 
-			var out = [];
+			var out = '';
 
-			while (true) {
+			do {
 				//avoid bitwise ops on ops longer than int32
-				var blocktype = [readbits(input_as_bits,16),readbits(input_as_bits,16),readbits(input_as_bits,16)];
+				var blocktype = [readbits(input_as_bits,24),readbits(input_as_bits,24)];
 				var crc = [readbits(input_as_bits,16),readbits(input_as_bits,16)];
-				if (blocktype[0] == 0x3141 && blocktype[1] == 0x5926 && blocktype[2] == 0x5359) { // (pi)
+				if (blocktype[0] == 0x314159 && blocktype[1] == 0x265359) { // (pi)
 					if (readbits(input_as_bits,1)) throw Error;//throw "Bzip2 randomised support not implemented";
 					var pointer = readbits(input_as_bits,24);
 					
@@ -269,29 +272,27 @@ var BZip2 = (function() {
 					
 					var nt = bwt_reverse(buffer, pointer);
 					
-					var done = [];
-					var i = 0;
+					var rle = '';
+					var i = 0, c;
 					// RLE decoding
 					while (i < nt.length) {
-						var c = charCodeAt(nt, i);
-						if ((i < nt.length - 4) && charCodeAt(nt, i + 1) == c && charCodeAt(nt, i + 2) == c && charCodeAt(nt, i + 3) == c) {
-							var rep = charCodeAt(nt, i + 4) + 4;
-							for (; rep > 0; rep--) done.push(nt[i]);
-							i += 5;
-							//push( Array(rep+1).join(nt[i]) );
-						} else {
-							done.push(nt[i++]);
+						rle += (c = nt[i] ); //always have a character like this one
+						if ((i < nt.length - 4) && nt.substr(i+1,3) == c+c+c ) {
+							//we have 3 more, so we have a repeat code
+							i += 4;
+							//join only adds separator n - 1 times, then + 3 because we have one already pushed
+							for ( var rep = charCodeAt(nt, i) + 3; rep > 0; rep-- ) rle += c;
 						}
+						i++;
 					}
-					out.push(done.join(''));
-				} else if (blocktype[0] == 0x1772 && blocktype[1] == 0x4538 && blocktype[2] == 0x5090) { // sqrt(pi)
+					out+=rle;
+				} else if (blocktype[0] == 0x177245 && blocktype[1] == 0x385090) { // sqrt(pi)
 					readbits(input_as_bits,input_as_bits.bits & 0x7); //align
-					break;
 				} else {
 					throw Error;//throw "Illegal Bzip2 blocktype = 0x" + blocktype.toString(16);
 				}
-			}
-			return out.join('');
+			} while ( input_as_bits.count < input_as_bits.f.length );
+			return out;
 		}
 	}
 	);
