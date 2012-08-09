@@ -52,7 +52,7 @@ var BZip2 = (function() {
 	
 	//mask long function name for YUI optimization
 	function charCodeAt(what, at) {
-		return what.charCodeAt(at);
+		return what.charCodeAt(at) & 255;
 	}
 	
 	function readbits( what, how_much) {
