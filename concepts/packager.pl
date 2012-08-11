@@ -8,7 +8,7 @@ my $read_length = 8192;
 
 my $data;
 
-my $package = 'out.js.bz2';
+my $package = 'scripts.pack.bz2';
 my @files = File::Glob::bsd_glob('package/*.js');
 my @filedata;
 
