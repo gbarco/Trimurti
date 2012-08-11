@@ -14,7 +14,7 @@ sub new {
     }, $class;
 }
 
-sub excel {
+sub load {
     my ($self, $file) = @_;
 
 		my @data;
