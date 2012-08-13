@@ -26,7 +26,7 @@ sub main {
 	$logger -> info('Starting Vishnu ' . $VERSION);
 
 	$logger -> info('Reading config file');
-	my $config = Trimurti::Vishnu::Config::read_project_config('tests/.vishnu');
+	my $config = Trimurti::Vishnu::Config::read_project_config('.vishnu');
 
 	$logger -> info('Building stash');
 	my $stash	= Trimurti::Vishnu::Config::build_stash( $config );
