@@ -6,6 +6,7 @@ package Trimurti::Vishnu::FileGroup::File::HTML;
 use strict;
 use warnings;
 use Carp qw( croak );
+use utf8;
 
 use Template;
 use Template::Provider;

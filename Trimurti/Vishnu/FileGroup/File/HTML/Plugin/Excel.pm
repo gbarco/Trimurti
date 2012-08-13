@@ -14,7 +14,7 @@ sub new {
     }, $class;
 }
 
-sub load {
+sub file_to_hash_list {
     my ($self, $file) = @_;
 
 		my @data;
