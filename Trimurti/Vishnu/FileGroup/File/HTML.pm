@@ -10,7 +10,6 @@ use Carp qw( croak );
 use Template;
 use Template::Provider;
 use Template::Parser;
-use Template::Stash;
 
 # ============================================================================
 require Exporter;
@@ -23,24 +22,15 @@ use vars qw($VERSION @ISA @EXPORT);
 sub vishnu {
 	my ( $stash ) = @_;
 	
-	my $tt_stash = Template::Stash->new();
-	$tt_stash->{VISHNU} = $stash;
-	
 	my $tt = Template->new({
-			PRE_CHOMP  => 1,
-			POST_CHOMP => 1,
-			TAG_STYLE => 'html',
 			ENCODING => 'utf8', #force utf8 encoding for templates
-			STASH => $tt_stash,
-			LOAD_TEMPLATES => [ Template::Provider->new( INCLUDE_PATH => $stash->{PROJECT}->{BASE} ) ],
+			PRE_CHOMP => 3,
+			POST_CHOMP => 3,
+			TAG_STYLE => 'html',
 			PLUGIN_BASE => [
 											'Trimurti::Vishnu::FileGroup::File::HTML::Filter',
 											'Trimurti::Vishnu::FileGroup::File::HTML::Plugin',
 										 ],
-			#PLUGINS => {
-			#	script => 'Trimurti::Vishnu::FileGroup::File::HTML::Filter::ScriptTag',
-			#	
-			#},
 			PREFIX_MAP => {
         file    => '0',     # file:foo.html
         #http    => '1',     # http:foo.html
@@ -52,7 +42,7 @@ sub vishnu {
 	
 	$tt->process(
 		$stash->{THIS}->{FILE}->{SOURCE_PATH},
-		$stash->{THIS},
+		{VISHNU=> $stash},
 	) || croak( $tt->error() . ' processing ' . $stash->{THIS}->{FILE}->{SOURCE_PATH} );
 }
 
