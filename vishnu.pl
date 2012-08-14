@@ -10,7 +10,6 @@ use utf8;
 our $VERSION = "0.01";
 
 # ============================================================================
-use Config::Simple;
 use Getopt::Long;
 use Log::Log4perl qw/:easy/;
 use Trimurti::Vishnu::Config;
