@@ -1,5 +1,5 @@
 <PROJECT>
-	NAME=Vishnu test
+	NAME=Shiva test
 	GIT_TREEISH=release
 	BEFORE=
 	AFTER=.tell_people
@@ -19,13 +19,6 @@
 	DESTINATION="sftp://10.152.18.4:222/var/www/img"
 	CREDENTIALS=.credentials
 </generator_img>
-<static>
-	ORDER=3
-	FILEGLOB=Articulo%20{[1-9],10}.html
-	ORIGIN="www.test.com/build/generator"
-	DESTINATION=ftp://10.152.18.4:21/
-	CREDENTIALS=.credentials
-</static>
 <.tell_people>
 	ACTION="echo 'Built www.ticketstar.com' | mail gbarcouy@gmail.com"
 </.tell_people>
