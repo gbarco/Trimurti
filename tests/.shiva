@@ -6,15 +6,26 @@
 </PROJECT>
 <generator>
 	ORDER=1
-	FILES=<Articulo%20[1-10].html>
+	FILEGLOB=Articulo%20{[1-9],10}.html
 	ORIGIN="www.test.com/build/generator"
-	DESTINATION=ssh://10.152.18.4:222/
+	DESTINATION="sftp://10.152.18.4:222/var/www"
 	CREDENTIALS=.credentials
 </generator>
-<static>
+<generator_img>
 	ORDER=2
-	FILES=<Articulo%20[1-10].html>
+	FILES=1.png
+	FILES=2.png
+	ORIGIN="www.test.com/build/generator/img"
+	DESTINATION="sftp://10.152.18.4:222/var/www/img"
+	CREDENTIALS=.credentials
+</generator_img>
+<static>
+	ORDER=3
+	FILEGLOB=Articulo%20{[1-9],10}.html
 	ORIGIN="www.test.com/build/generator"
 	DESTINATION=ftp://10.152.18.4:21/
 	CREDENTIALS=.credentials
 </static>
+<.tell_people>
+	ACTION="echo 'Built www.ticketstar.com' | mail gbarcouy@gmail.com"
+</.tell_people>

@@ -1,6 +1,5 @@
-package Trimurti::Vishnu::Config;
+package Trimurti::Shiva::Config;
 
-use lib '../../';
 # ============================================================================
 # Handles configuration 
 # ============================================================================
@@ -14,6 +13,8 @@ use Getopt::Long;
 use Log::Log4perl qw/:easy/;
 use POSIX qw(isdigit);
 use File::Basename;
+use File::Spec;
+use File::Glob;
 
 # ============================================================================
 require Exporter;
@@ -28,12 +29,12 @@ my $config_file = ".vishnu";
 # ============================================================================
 sub read_project_config {
 	#might want to determine root project directory...
-	my $config_file = shift || '.vishnu';
+	my $config_file = shift || '.shiva';
 	my $config_reader =  new Config::General(
 																		-ConfigFile => $config_file,
 																		-IncludeRelative => 1,
 																		-AutoTrue=>1,
-																		) || croak( 'Trimurti::Vishnu::Config failed to load config file $config_file.' );
+																		) || croak( 'Trimurti::Shiva::Config failed to load config file $config_file.' );
 	my $config = $config_reader->{config};
 	
 	my($filename, $directories) = File::Basename::fileparse($config_file);
@@ -116,6 +117,13 @@ sub build_stash {
 	#release temp space
 	undef @unsort_file_groups;
 	# FILE_GROUPS ==============================================================
+	
+	foreach my $file_group ( @{$stash->{FILE_GROUPS}} ) {
+		if ( defined $file_group->{FILEGLOB} ) {
+			my $glob = File::Spec->catfile( $file_group->{ORIGIN}, $file_group->{FILEGLOB} );
+			push @{$file_group->{FILES}}, map( File::Basename::fileparse( $_ ), File::Glob::glob( $glob ) );
+		}
+	}
 	
 	return $stash;
 }
