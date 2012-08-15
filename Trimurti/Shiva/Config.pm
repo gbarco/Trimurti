@@ -121,7 +121,7 @@ sub build_stash {
 	foreach my $file_group ( @{$stash->{FILE_GROUPS}} ) {
 		if ( defined $file_group->{FILEGLOB} ) {
 			my $glob = File::Spec->catfile( $file_group->{ORIGIN}, $file_group->{FILEGLOB} );
-			push @{$file_group->{FILES}}, map( File::Basename::fileparse( $_ ), File::Glob::glob( $glob ) );
+			push @{$file_group->{FILES}}, File::Glob::glob( $glob );
 		}
 	}
 	
