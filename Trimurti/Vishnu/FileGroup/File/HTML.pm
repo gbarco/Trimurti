@@ -12,6 +12,8 @@ use Template;
 use Template::Provider;
 use Template::Parser;
 
+use Trimurti::Vishnu::CrStripper;
+
 # ============================================================================
 require Exporter;
 use vars qw($VERSION @ISA @EXPORT);
@@ -27,7 +29,9 @@ sub vishnu {
 			ENCODING => 'utf8', #force utf8 encoding for templates
 			PRE_CHOMP => 3,
 			POST_CHOMP => 3,
-			TAG_STYLE => 'html',
+			START_TAG => quotemeta('<!-- VISHNU '),
+			END_TAG   => quotemeta('-->'),
+			LOAD_TEMPLATE => [ Trimurti::Vishnu::CrStripper->new( { INCLUDE_PATH => $stash->{PROJECT}->{BASE} } ) ],
 			PLUGIN_BASE => [
 											'Trimurti::Vishnu::FileGroup::File::HTML::Filter',
 											'Trimurti::Vishnu::FileGroup::File::HTML::Plugin',
