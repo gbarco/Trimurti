@@ -6,8 +6,8 @@ sub _template_content {
 	my ($self,$path) = @_;
 	my ($data,$error,$mod_date) = $self->SUPER::_template_content($path);
 
-	# strip CR from CR+LF pairs
-	$data =~ s/\r\n/\n/;
+	# strip CR anywhere!
+	$data =~ tr/\x{d}//d;
 
 	return wantarray ? ($data,$error,$mod_date) : $data;
 }
