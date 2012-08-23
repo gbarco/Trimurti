@@ -31,7 +31,7 @@ sub vishnu {
 			POST_CHOMP => 3,
 			START_TAG => quotemeta('<!-- VISHNU '),
 			END_TAG   => quotemeta('-->'),
-			LOAD_TEMPLATE => [ Trimurti::Vishnu::CrStripper->new( { INCLUDE_PATH => $stash->{PROJECT}->{BASE} } ) ],
+			LOAD_TEMPLATES => [ Trimurti::Vishnu::CrStripper->new( { INCLUDE_PATH => $stash->{PROJECT}->{BASE} } ) ],
 			PLUGIN_BASE => [
 											'Trimurti::Vishnu::FileGroup::File::HTML::Filter',
 											'Trimurti::Vishnu::FileGroup::File::HTML::Plugin',
@@ -45,9 +45,13 @@ sub vishnu {
 			OUTPUT_PATH => $stash->{THIS}->{FILE_GROUP}->{DESTINATION},
 	});
 	
+	#fix CRLF problems
+	open my $out_fh, '>:raw', $stash->{THIS}->{FILE_GROUP}->{DESTINATION} . $stash->{THIS}->{FILE}->{DESTINATION_PATH}    or die $stash->{THIS}->{FILE}->{DESTINATION_PATH} . ": $!\n";
+	
 	$tt->process(
 		$stash->{THIS}->{FILE}->{SOURCE_PATH},
 		{VISHNU=> $stash},
+		$out_fh,
 	) || croak( $tt->error() . ' processing ' . $stash->{THIS}->{FILE}->{SOURCE_PATH} );
 }
 
