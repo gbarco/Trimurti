@@ -11,7 +11,7 @@
 	FILES=HTML:test_filter_markdown.html
 	FILES=HTML:test_filter_excel.html
 	FILES=HTML:test_filter_packers.html
-	FILES=HTML:test_filter_sass.html
+	FILES=HTML:test_filter_scss_sass.html
 	DESTINATION="www.test.com/build/"
 </filters>
 <generator.statics>

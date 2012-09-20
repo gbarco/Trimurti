@@ -1,8 +1,10 @@
-<!-- USE Excel -->
-<!-- rows = Excel.excel('test.xls') -->
-<!-- FOREACH row IN rows -->
-<!-- filename = row.Articulo _ ".html" | uri --> 
-<!-- FILTER redirect( filename ) -->
+<!--+ USE Excel -->
+<!--+ USE Dumper -->
+<!--+ rows = Excel.excel('test.xls') -->
+<!--+ FOREACH row IN rows -->
+<!--+ filename = row.Articulo _ ".html" | uri -->
+<!--+ filename -->
+<!--+ FILTER redirect( filename ) -->
 <html>
 	<head>
 	</head>
@@ -10,9 +12,9 @@
 		<thead><tr><th>Articulo</th><th>Descripción</th><th>Precio</th></tr></thead>
 		<tbody>
 			<tr>
-				<td><!-- row.Articulo --></td>
-				<td><!-- row.Descripcion --></td>
-				<td><!-- row.Precio --></td>
+				<td><!--+ row.Articulo --></td>
+				<td><!--+ row.Descripcion --></td>
+				<td><!--+ row.Precio --></td>
 				<td><img src="<!-- 'img/' _ (row_number % 2 ) _ '.png' -->"></td>
 			</tr>
 		</tbody>
@@ -20,5 +22,5 @@
 	<body>
 	</body>
 </html>
-<!-- END -->
-<!-- END -->
+<!--+ END -->
+<!--+ END -->

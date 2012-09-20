@@ -1,9 +1,13 @@
-<!-- USE Sass -->
-<!-- USE Scss -->
+<!--+ USE CSSPacker -->
+<!--+ USE Sass -->
+<!--+ USE Scss -->
+<!--+ USE Markdown -->
 <html>
-	<head>
-<!-- FILTER Scss -->
-	<style>
+<head>
+<!-- HTML comment! -->
+<style>
+<!--+ FILTER $CSSPacker -->
+<!--+ FILTER $Scss -->
 $blue: #3bbfce;
 $margin: 16px;
 
@@ -18,10 +22,12 @@ $margin: 16px;
   margin: $margin / 2;
   border-color: $blue;
 }
-	</style>
-<!-- END -->
-<!-- VISHNU FILTER Sass -->
-	<style>
+<!--+ END -->
+<!--+ END -->
+</style>
+<style>
+<!--+ FILTER $CSSPacker -->
+<!--+ FILTER $Sass -->
 table.hl
   margin: 2em 0
   td.ln
@@ -32,11 +38,12 @@ li
     family: serif
     weight: bold
     size: 1.2em
-	</style>
-	<!-- VISHNU END -->
+<!--+ END -->
+<!--+ END -->
+</style>
 </head>
 <body>
-<!-- VISHNU FILTER $Markdown -->
+<!--+ FILTER $Markdown -->
 &copy;
 
 AT&T
@@ -48,6 +55,6 @@ If this where html I would get into trouble by just writing <code>!
 1.  Bird
 1.  McHale
 1.  Parish
-<!-- VISHNU END -->
+<!--+ END -->
 </body>
 </html>

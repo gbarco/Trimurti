@@ -1,7 +1,7 @@
 package Trimurti::Vishnu::FileGroup::File::HTML;
 
 # ============================================================================
-# Handles configuration 
+# Handles configuration
 # ============================================================================
 use strict;
 use warnings;
@@ -24,14 +24,14 @@ use vars qw($VERSION @ISA @EXPORT);
 # ============================================================================
 sub vishnu {
 	my ( $stash ) = @_;
-	
+
 	my $tt = Template->new({
 			ENCODING => 'utf8', #force utf8 encoding for templates
 			PRE_CHOMP => 3,
 			POST_CHOMP => 3,
-			START_TAG => quotemeta('<!-- VISHNU '),
+			START_TAG => quotemeta('<!--+'),
 			END_TAG   => quotemeta('-->'),
-			LOAD_TEMPLATES => [ Trimurti::Vishnu::CrStripper->new( { INCLUDE_PATH => $stash->{PROJECT}->{BASE} } ) ],
+			LOAD_TEMPLATE => [ Trimurti::Vishnu::CrStripper->new( { INCLUDE_PATH => $stash->{PROJECT}->{BASE} } ) ],
 			PLUGIN_BASE => [
 											'Trimurti::Vishnu::FileGroup::File::HTML::Filter',
 											'Trimurti::Vishnu::FileGroup::File::HTML::Plugin',
@@ -44,10 +44,10 @@ sub vishnu {
 			OUTPUT => $stash->{THIS}->{FILE}->{DESTINATION_PATH},
 			OUTPUT_PATH => $stash->{THIS}->{FILE_GROUP}->{DESTINATION},
 	});
-	
+
 	#fix CRLF problems
 	open my $out_fh, '>:raw', $stash->{THIS}->{FILE_GROUP}->{DESTINATION} . $stash->{THIS}->{FILE}->{DESTINATION_PATH}    or die $stash->{THIS}->{FILE}->{DESTINATION_PATH} . ": $!\n";
-	
+
 	$tt->process(
 		$stash->{THIS}->{FILE}->{SOURCE_PATH},
 		{VISHNU=> $stash},

@@ -1,4 +1,4 @@
-package Trimurti::Vishnu::FileGroup::File::HTML::Filter::Sass;
+package Trimurti::Vishnu::FileGroup::File::HTML::Filter::Scss;
 
 use Template::Plugin::Filter;
 use base qw( Template::Plugin::Filter );
@@ -17,9 +17,9 @@ sub filter {
 
     # $args = [ 'foo', 'bar' ]
     # $conf = { tag => 'script' }
-		
+
 		my $interpreter = Text::Sass->new();
-		
+
     $text = $interpreter->scss2css( $text );
 
     return $text;

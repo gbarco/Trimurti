@@ -1,20 +1,20 @@
-<!-- USE Excel -->
+<!--+ USE Excel -->
 <html>
 	<head>
 	</head>
 	<body>
-		<!-- rows = Excel.file_to_hash_list('test.xls') -->
+		<!--+ rows = Excel.file_to_hash_list('test.xls') -->
 		<table>
 		<thead><tr><th>Articulo</th><th>Descripción</th><th>Precio</th></tr></thead>
-		<!-- FOREACH row IN rows --> 
+		<!--+ FOREACH row IN rows --> 
 		<tbody>
 			<tr>
-				<td><!-- row.Articulo --></td>
-				<td><!-- row.Descripcion --></td>
-				<td><!-- row.Precio --></td>
+				<td><!--+ row.Articulo --></td>
+				<td><!--+ row.Descripcion --></td>
+				<td><!--+ row.Precio --></td>
 			</tr>
 		</tbody>
-		<!-- END -->
+		<!--+ END -->
 		</table>
 	</body>
 </html>
